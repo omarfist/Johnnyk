@@ -1,17 +1,252 @@
-# G-CUE ATELIER: Client-Side Sensory Layer Engine
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>G-CUE ATELIER Engine</title>
+    <style>
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        body {
+            background-color: #050505 !important; 
+            color: #ffffff !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+            overflow: hidden;
+        }
+        main {
+            width: 100%; 
+            max-width: 380px; 
+            height: 680px; 
+            background-color: #0D0D0D !important;
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 28px; 
+            padding: 24px;
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+        }
+        .screen { 
+            display: none; 
+            flex-direction: column; 
+            height: 100%; 
+            width: 100%; 
+        }
+        .screen.active { 
+            display: flex !important; 
+        }
+        h1 { 
+            font-size: 22px; 
+            letter-spacing: 4px; 
+            text-transform: uppercase; 
+            color: #D4AF37 !important; 
+            text-align: center; 
+            margin-bottom: 4px; 
+            font-weight: 300; 
+        }
+        .subtitle { 
+            font-size: 9px; 
+            color: #666666 !important; 
+            text-align: center; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            margin-bottom: 30px; 
+        }
+        .quote { 
+            font-size: 11px; 
+            color: #888888 !important; 
+            text-align: center; 
+            margin-bottom: 20px; 
+            padding: 0 10px; 
+            line-height: 1.4;
+            min-height: 32px;
+        }
+        .login-box { 
+            border: 1px solid rgba(255,255,255,0.06); 
+            background-color: #111111 !important; 
+            padding: 30px 20px; 
+            border-radius: 166px; 
+            margin: auto 0; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+        }
+        .input-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 6px; 
+        }
+        .input-group label { 
+            font-size: 10px; 
+            color: #888888 !important; 
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
+        }
+        .input-field { 
+            width: 100%; 
+            background-color: #161616 !important; 
+            border: 1px solid rgba(255,255,255,0.12); 
+            border-radius: 8px; 
+            padding: 14px; 
+            color: #ffffff !important; 
+            font-family: monospace; 
+            font-size: 14px; 
+            outline: none; 
+        }
+        #spatial-viewport { 
+            width: 100%; 
+            height: 260px; 
+            background-color: #141414 !important; 
+            border-radius: 20px; 
+            position: relative; 
+            overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.08); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        #spatial-viewport svg {
+            width: 50%;
+            height: 50%;
+            transition: transform 0.3s ease;
+        }
+        .pfm-stutter-active { 
+            filter: saturate(180%) contrast(140%) brightness(50%);
+            opacity: 0.7;
+        }
+        .spatial-tag { 
+            position: absolute; 
+            bottom: 75px; 
+            left: 16px; 
+            background: linear-gradient(135deg, #BF953F, #AA771C) !important; 
+            color: #000000 !important; 
+            font-size: 9px; 
+            font-weight: 900; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            text-transform: uppercase; 
+        }
+        .meta-card { 
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            background: linear-gradient(transparent, rgba(0,0,0,0.95) 50%); 
+            padding: 20px 16px 14px 16px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 2px; 
+        }
+        .meta-title { font-size: 14px; font-weight: bold; color: #ffffff !important; letter-spacing: 0.5px; }
+        .meta-desc { font-size: 10px; color: #888888 !important; }
+        #telemetry-ribbon { 
+            background-color: #111111 !important; 
+            padding: 8px 12px; 
+            border-radius: 8px; 
+            font-family: monospace; 
+            font-size: 10px; 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 12px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+        }
+        .t-val { color: #D4AF37 !important; font-weight: bold; }
+        .matrix-box { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+        .matrix-row { display: flex; gap: 8px; }
+        .btn-toggle {
+            flex: 1;
+            background-color: #161616 !important;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 12px 6px;
+            color: #888888 !important;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-toggle.active {
+            border-color: #D4AF37 !important;
+            color: #D4AF37 !important;
+            background-color: rgba(212,175,55,0.05) !important;
+        }
+        .btn-gold { 
+            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 50%, #AA771C 100%) !important; 
+            color: #000000 !important; font-weight: 900; border: none; padding: 15px; border-radius: 12px; 
+            font-size: 11px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; text-align: center; width: 100%;
+        }
+        .btn-outline { 
+            flex: 1; background-color: #161616 !important; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; 
+            padding: 14px; color: #ffffff !important; font-size: 11px; font-weight: bold; text-transform: uppercase; cursor: pointer; text-align: center; 
+        }
+        .footer-brand { text-align: center; font-size: 8px; color: #555555 !important; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; }
+    </style>
+</head>
+<body>
 
-G-CUE ATELIER is a highly optimized, low-overhead mobile spatial preview framework built to handle dense 3D and VR fashion asset configurations on standard devices without heavy cloud rendering reliance or thermal throttling.
+    <main>
+        <!-- SCREEN 1: LOGIN -->
+        <div id="screen-login" class="screen active">
+            <h1>G-CUE ATELIER</h1>
+            <div class="subtitle">Secure Node Entry</div>
+            <div class="login-box">
+                <div class="input-group">
+                    <label>Operator Identity</label>
+                    <input type="text" id="username-field" class="input-field" value="Mj" autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label>Access Key</label>
+                    <input type="password" id="password-field" class="input-field" value="••••••••">
+                </div>
+                <button id="initialize-btn" class="btn-gold">Initialize Session</button>
+            </div>
+        </div>
 
-## 🌌 The Technical Imperative: "Pure Fringe Magic"
-Standard Virtual Try-On (VTO) configurations require constant server up-links and dense, photorealistic calculations that spike client device RAM and cause severe thermal degradation on mobile units. 
+        <!-- SCREEN 2: ACTIVE RECONNAISSANCE CORE -->
+        <div id="screen-studio" class="screen">
+            <h1>G-CUE Spatial</h1>
+            <div id="dynamic-quote" class="quote">Active Calibration Stream Engaged.</div>
 
-G-CUE bypasses expensive, raw-compute hardware demands by moving resource management entirely to the client device using an aggressive, deterministic First-In, First-Out (FIFO) pointer memory model.
+            <div id="telemetry-ribbon">
+                <div>VRAM STAGE: <span id="vram-node" class="t-val">40.00 MB</span></div>
+                <div>FIFO LOCK: <span id="mode-node" class="t-val">STABLE</span></div>
+            </div>
 
-### 🛡️ Core Engine Architecture
-1. **Deterministic Cache Eviction (FIFO Model):** Every layout shift or style modification triggers an instantaneous memory purge loop (`gl.deleteTexture`). Old asset layers are forcefully evicted from cache buffers, locking the running app's memory profile to a flat, room-temperature **40.00 MB VRAM baseline**.
-2. **The 3-Second Processing Horizon Mask:** Rather than allowing network data lag to freeze the application interface, G-CUE uses a controlled, velocity-tracked cinematic cyber-stutter mask. This intentional 3-second visual warp reframe handles structural asset injections in the background while turning processing latency into a high-end, futuristic brand aesthetic.
+            <div id="spatial-viewport">
+                <svg id="vector-container" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1">
+                    <path d="M20.38 3.46L16 2.14a1 1 0 0 0-.54 0L11 3.46a1 1 0 0 1-.76 0L5.86 2.14a1 1 0 0 0-.54 0L1 3.46A1 1 0 0 0 0 4.43v14a1 1 0 0 0 .62.93l4.7 1.41a1 1 0 0 0 .54 0L10 19.46a1 1 0 0 1 .76 0l4.38 1.31a1 1 0 0 0 .54 0l4.7-1.41a1 1 0 0 0 .62-.93v-14a1 1 0 0 0-.62-.93z"/>
+                </svg>
+                <div class="spatial-tag">Gemini Spatial 3D</div>
+                <div class="meta-card">
+                    <div id="look-title" class="meta-title">Professional Jacket Base</div>
+                    <div id="look-desc" class="meta-desc">Mode Alignment: Work Hard Allocation</div>
+                </div>
+            </div>
 
-## 🚀 Deployment Status
-The current repository contains the self-contained frontend core. It features integrated biometric entry gate simulations, Web Audio API haptic synchronization arrays, and active multi-model canvas rendering frameworks optimized for mobile Safari and WebXR environments.
+            <!-- Parameters Grid selectors -->
+            <div class="matrix-box" style="margin-top: 15px; gap: 8px;">
+                <div class="matrix-row">
+                    <button id="mode-work" class="btn-toggle active" onclick="setTacticalTrack('work')">💼 Work Hard</button>
+                    <button id="mode-play" class="btn-toggle" onclick="setTacticalTrack('play')">⚡ Play Hard</button>
+                </div>
+                <div id="coverage-row" class="matrix-row">
+                    <button id="cov-full" class="btn-toggle active" onclick="setCoverageScope('full')">Head To Toes</button>
+                    <button id="cov-part" class="btn-toggle" onclick="setCoverageScope('partial')">Partial Fit</button>
+                </div>
+            </div>
 
-*Built on top of Google Gemini architecture presets with absolute technical intent.*
+            <div class="matrix-box">
+                <div class="matrix-row">
+                    <button class="btn-outline" onclick="triggerPfmCycle()">Adjust Style</button>
+                    <button class="btn-gold" style="flex: 1.3;" onclick="triggerPfmCycle()">Try On Instantly</button>
