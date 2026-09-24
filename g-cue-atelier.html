@@ -1,121 +1,1183 @@
-<!DOCTYPE html>
+
+OCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>G-CUE ATELIER Engine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CUE — Spatial Fashion & Beauty Concierge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <style>
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-            -webkit-tap-highlight-color: transparent; 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
+
         body {
-            background-color: #050505 !important; 
-            color: #ffffff !important;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 20px; 
+            background: #050505;
+            color: #f4f4f4;
+            font-family: 'Inter', sans-serif;
             overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        main {
-            width: 100%; 
-            max-width: 380px; 
-            height: 680px; 
-            background-color: #0D0D0D !important;
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            border-radius: 28px; 
-            padding: 24px;
-            display: flex; 
-            flex-direction: column; 
-            position: relative; 
-            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+
+        .mobile-viewport {
+            width: 100%;
+            max-width: 430px;
+            height: 100vh;
+            max-height: 932px;
+            background: #0b0b0b;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
         }
-        .screen { 
-            display: none; 
-            flex-direction: column; 
-            height: 100%; 
-            width: 100%; 
+
+        @media (min-width: 431px) {
+            .mobile-viewport {
+                border: 10px solid #1c1c1c;
+                border-radius: 36px;
+            }
         }
-        .screen.active { 
-            display: flex !important; 
+
+        .screen {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #0b0b0b;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            z-index: 1;
         }
-        h1 { 
-            font-size: 22px; 
-            letter-spacing: 4px; 
-            text-transform: uppercase; 
-            color: #D4AF37 !important; 
-            text-align: center; 
-            margin-bottom: 4px; 
-            font-weight: 300; 
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+            z-index: 10;
         }
-        .subtitle { 
-            font-size: 9px; 
-            color: #666666 !important; 
-            text-align: center; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            margin-bottom: 30px; 
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #1a1a1a;
+            background: #0d0d0d;
         }
-        .quote { 
-            font-size: 11px; 
-            color: #888888 !important; 
-            text-align: center; 
-            margin-bottom: 20px; 
-            padding: 0 10px; 
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn-text {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .btn-text:hover {
+            color: #00ff66;
+        }
+
+        .content-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scrollbar-width: none;
+        }
+
+        .content-body::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* SCREEN 0: SENSORY INTRO GATE */
+        .sensory-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            gap: 20px;
+            background: radial-gradient(circle at center, #181215 0%, #0b0b0b 80%);
+        }
+
+        .sensory-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.8rem;
+            color: #fff;
+            font-weight: 400;
+            line-height: 1.3;
+        }
+
+        .sensory-hero p {
+            font-size: 0.75rem;
+            color: #999;
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        .pulse-btn {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255,255,255,0.15);
+        }
+
+        .pulse-btn:hover {
+            background: #00ff66;
+            box-shadow: 0 0 25px rgba(0,255,102,0.4);
+        }
+
+        /* SCREEN 1: HOME & CAROUSEL */
+        .hero-banner {
+            background: #141414;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: center;
+        }
+
+        .hero-banner h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.4rem;
+            color: #fff;
+            font-weight: 400;
+        }
+
+        .hero-banner p {
+            font-size: 0.7rem;
+            color: #888;
             line-height: 1.4;
-            min-height: 32px;
         }
-        .login-box { 
-            border: 1px solid rgba(255,255,255,0.06); 
-            background-color: #111111 !important; 
-            padding: 30px 20px; 
-            border-radius: 166px; 
-            margin: auto 0; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 20px; 
+
+        .section-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: -10px;
         }
-        .input-group { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 6px; 
+
+        .section-title {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
         }
-        .input-group label { 
-            font-size: 10px; 
-            color: #888888 !important; 
-            letter-spacing: 1px; 
-            text-transform: uppercase; 
+
+        .section-hint {
+            font-size: 0.55rem;
+            color: #00ff66;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .input-field { 
-            width: 100%; 
-            background-color: #161616 !important; 
-            border: 1px solid rgba(255,255,255,0.12); 
-            border-radius: 8px; 
-            padding: 14px; 
-            color: #ffffff !important; 
-            font-family: monospace; 
-            font-size: 14px; 
-            outline: none; 
+
+        .carousel-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            cursor: grab;
         }
-        #spatial-viewport { 
-            width: 100%; 
-            height: 260px; 
-            background-color: #141414 !important; 
-            border-radius: 20px; 
-            position: relative; 
-            overflow: hidden; 
-            border: 1px solid rgba(255,255,255,0.08); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+
+        .carousel-container::-webkit-scrollbar {
+            display: none;
         }
-        #spatial-viewport svg {
-            width: 50%;
-            height: 50%;
-            transition: transform 0.3s ease;
+
+        .designer-card {
+            min-width: 155px;
+            height: 215px;
+            background: #131313;
+            border: 1px solid #222;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            scroll-snap-align: start;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: border-color 0.2s;
         }
+
+        .designer-card:hover {
+            border-color: #00ff66;
+        }
+
+        .designer-card img {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .card-toggle-badge {
+            position: absolute;
+            top: 8px; right: 8px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #aaa;
+            font-size: 0.5rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            z-index: 3;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .card-toggle-badge:hover {
+            background: #00ff66;
+            color: #000;
+            border-color: #00ff66;
+        }
+
+        .designer-info {
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 75%, transparent 100%);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .designer-info span {
+            font-size: 0.55rem;
+            color: #00ff66;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .designer-info strong {
+            font-size: 0.75rem;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .cat-card {
+            background: #121212;
+            border: 1px solid #222;
+            padding: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .cat-card:hover {
+            border-color: #00ff66;
+            background: #171717;
+        }
+
+        .cat-card strong {
+            font-size: 0.85rem;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .cat-card span {
+            font-size: 0.65rem;
+            color: #777;
+        }
+
+        /* SCREEN 2: WORKSPACE */
+        .workspace-preview {
+            background: radial-gradient(circle at center, #1f1619 0%, #0d0b0b 100%);
+            border: 1px solid #262626;
+            border-radius: 12px;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            position: relative;
+        }
+
+        .preview-tag {
+            position: absolute;
+            top: 14px; left: 14px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.6rem;
+            color: #00ff66;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .preview-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .preview-info p {
+            font-size: 0.7rem;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sub {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #ddd;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-sub:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        .items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .item-row {
+            background: #141414;
+            border: 1px solid #222;
+            padding: 12px 14px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-details h4 {
+            font-size: 0.8rem;
+            color: #fff;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .item-details span {
+            font-size: 0.65rem;
+            color: #777;
+        }
+
+        .item-price {
+            font-size: 0.8rem;
+            color: #00ff66;
+            font-weight: 600;
+        }
+
+        .footer-bar {
+            padding: 16px 20px;
+            background: #0d0d0d;
+            border-top: 1px solid #1a1a1a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-stack span {
+            display: block;
+            font-size: 0.6rem;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .total-stack strong {
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: #f4f4f4;
+            color: #0b0b0b;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #00ff66;
+        }
+
+        /* OVERLAYS & VTO SIMULATOR */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5,5,5,0.92);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sheet {
+            background: #111111;
+            border: 1px solid #222;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 24px 20px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            scrollbar-width: none;
+        }
+
+        .sheet::-webkit-scrollbar {
+            display: none;
+        }
+
+        .overlay.active .sheet {
+            transform: translateY(0);
+        }
+
+        .sheet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sheet-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: #181818;
+            border: 1px solid #2a2a2a;
+            padding: 10px 12px;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.8rem;
+            outline: none;
+        }
+
+        .modal-input:focus {
+            border-color: #00ff66;
+        }
+
+        .manifesto-text {
+            font-size: 0.75rem;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        .dimensions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .dim-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .dim-field label {
+            font-size: 0.55rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .skin-spectrum-card {
+            background: #161616;
+            border: 1px solid #2a2a2a;
+            padding: 10px 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            display: none;
+        }
+
+        .skin-swatch {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #c59b76;
+            border: 1px solid #fff;
+            flex-shrink: 0;
+        }
+
+        .skin-info h5 {
+            font-size: 0.75rem;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .skin-info span {
+            font-size: 0.6rem;
+            color: #00ff66;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .vto-viewport {
+            width: 100%;
+            height: 220px;
+            background: #000;
+            border: 1px solid #00ff66;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vto-viewport.active {
+            display: flex;
+        }
+
+        #user-vto-photo {
+            position: absolute;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: brightness(0.9);
+            z-index: 1;
+        }
+
+        #garment-vto-overlay {
+            position: absolute;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            mix-blend-mode: overlay;
+            opacity: 0.8;
+            z-index: 2;
+        }
+
+        .vto-live-badge {
+            position: absolute;
+            top: 10px; left: 10px;
+            z-index: 5;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid #00ff66;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.55rem;
+            color: #00ff66;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .file-upload-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-viewport">
+
+        <!-- SCREEN 0: SENSORY INTRO GATE -->
+        <div class="screen active" id="screen-intro">
+            <div class="sensory-hero">
+                <div class="logo" style="font-size: 1.5rem; margin-bottom: -10px;">CUE</div>
+                <h1>Fashion & Beauty in perfect harmony.</h1>
+                <p>Listen closely as GEM, your personal concierge AI, sets your atmosphere for world-class style and sensory beauty.</p>
+                <button class="pulse-btn" id="start-sensory-btn">Enter Atmosphere</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 1: HOME -->
+        <div class="screen" id="screen-home">
+            <header>
+                <div class="logo">CUE</div>
+                <div class="header-actions">
+                    <button class="btn-text" id="open-about-btn">About</button>
+                    <button class="btn-text" id="open-signin-btn" style="color: #00ff66;">Sign In</button>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <div class="hero-banner">
+                    <h1 id="welcome-heading">Live together with style</h1>
+                    <p>Curated by Gemini concierge AI—moving fluidly from the sharp focus of the day into the untamed energy of the night.</p>
+                </div>
+
+                <div class="section-header-row">
+                    <div class="section-title">Fresh Finds & Runway</div>
+                    <div class="section-hint">Hold 2s to Wear Look</div>
+                </div>
+
+                <div class="carousel-container" id="designer-carousel">
+                    <!-- Card 1 -->
+                    <div class="designer-card" data-designer="Jil Vesper" data-item="Sculptural Wool Trench" data-desc="Heavyweight virgin wool calibrated for your skin undertone and body volume." data-altimg="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=80">
+                        <button class="card-toggle-badge" title="Toggle View">Spec</button>
+                        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=80" alt="Look" class="card-img">
+                        <div class="designer-info">
+                            <span>Jil Vesper</span>
+                            <strong>Wool Trench</strong>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="designer-card" data-designer="Atelier Marni" data-item="Liquid Silk Slip" data-desc="Washed silk charmeuse reflecting tone-harmonized illumination against your complexion." data-altimg="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&q=80">
+                        <button class="card-toggle-badge" title="Toggle View">Spec</button>
+                        <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&q=80" alt="Look" class="card-img">
+                        <div class="designer-info">
+                            <span>Atelier Marni</span>
+                            <strong>Liquid Silk Slip</strong>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="designer-card" data-designer="Margiela Matrix" data-item="Architectural Leather" data-desc="Tuscan box-calf leather burnished to a matte finish, paired with chromatic contrast." data-altimg="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&q=80">
+                        <button class="card-toggle-badge" title="Toggle View">Spec</button>
+                        <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&q=80" alt="Look" class="card-img">
+                        <div class="designer-info">
+                            <span>Margiela Matrix</span>
+                            <strong>Arch Leather</strong>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="designer-card" data-designer="Diesel Noir" data-item="Raw Denim Tailoring" data-desc="Unwashed Japanese selvedge denim mapped precisely to your proportions." data-altimg="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&q=80">
+                        <button class="card-toggle-badge" title="Toggle View">Spec</button>
+                        <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&q=80" alt="Look" class="card-img">
+                        <div class="designer-info">
+                            <span>Diesel Noir</span>
+                            <strong>Raw Denim</strong>
+                        </div>
+                    </div>
+                    <!-- Card 5 -->
+                    <div class="designer-card" data-designer="Khaite Studio" data-item="Cashmere Evening Wrap" data-desc="Plush Mongolian cashmere designed for shifting temperatures." data-altimg="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&q=80">
+                        <button class="card-toggle-badge" title="Toggle View">Spec</button>
+                        <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&q=80" alt="Look" class="card-img">
+                        <div class="designer-info">
+                            <span>Khaite Studio</span>
+                            <strong>Cashmere Wrap</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">Explore Categories</div>
+                <div class="category-grid">
+                    <div class="cat-card" data-cat="Clothing">
+                        <strong>Clothing</strong>
+                        <span>Apparel & Tailoring</span>
+                    </div>
+                    <div class="cat-card" data-cat="Beauty">
+                        <strong>Beauty</strong>
+                        <span>Makeup & Skincare Palette</span>
+                    </div>
+                    <div class="cat-card" data-cat="Accessories">
+                        <strong>Accessories</strong>
+                        <span>Jewelry & Hardware</span>
+                    </div>
+                    <div class="cat-card" data-cat="Bags & Shoes">
+                        <strong>Bags & Shoes</strong>
+                        <span>Totes & Footwear</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: WORKSPACE -->
+        <div class="screen" id="screen-workspace">
+            <header>
+                <div class="logo" id="workspace-title">CUE // Clothing</div>
+                <button class="btn-text" id="back-home-btn">← Home</button>
+            </header>
+
+            <div class="content-body">
+                <div class="workspace-preview">
+                    <div class="preview-tag">Live Draping Matrix</div>
+                    <div class="preview-info">
+                        <h3 id="preview-capsule-name">Atelier Vesper Capsule</h3>
+                        <p>Real-time adjustment on your digital double.</p>
+                        <div class="action-row">
+                            <button class="btn-sub" id="refresh-look-btn">Regenerate Look</button>
+                            <button class="btn-sub" id="download-look-btn">Download Look</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">Curated Selection</div>
+                <div class="items-list" id="workspace-items">
+                    <div class="item-row">
+                        <div class="item-details">
+                            <h4 id="item-1-name">Daytime Executive Blazer</h4>
+                            <span id="item-1-meta">Clothing • Size S</span>
+                        </div>
+                        <div class="item-price" id="item-1-price">$420.00</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-details">
+                            <h4 id="item-2-name">Asymmetric Silk Slip</h4>
+                            <span id="item-2-meta">Clothing • Size S</span>
+                        </div>
+                        <div class="item-price" id="item-2-price">$280.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bar">
+                <div class="total-stack">
+                    <span>Total Curated</span>
+                    <strong id="cart-total">$700.00</strong>
+                </div>
+                <button class="btn-primary" id="checkout-btn">Secure Checkout</button>
+            </div>
+        </div>
+
+        <!-- VTO MODAL -->
+        <div class="overlay" id="vto-overlay">
+            <div class="sheet">
+                <div class="sheet-header">
+                    <h3 id="vto-modal-title">Volumetric & Skin Matrix</h3>
+                    <button class="close-btn" id="close-vto-btn">&times;</button>
+                </div>
+                
+                <div id="vto-setup-form" style="display: flex; flex-direction: column; gap: 12px;">
+                    <p class="manifesto-text">Upload your reference photo. GEM will auto-detect your skin tone spectrum and calibrate fabric lighting:</p>
+                    
+                    <input type="file" id="user-photo-upload" class="file-upload-input" accept="image/*">
+                    <button class="btn-sub" id="trigger-file-btn" style="width: 100%; text-align: center; padding: 12px;">Upload Photo for Skin Spectrum Scan</button>
+
+                    <div class="skin-spectrum-card" id="skin-spectrum-card">
+                        <div class="skin-swatch" id="detected-skin-swatch"></div>
+                        <div class="skin-info">
+                            <h5 id="detected-skin-label">Spectrum: Neutral Warm (Fitzpatrick Type IV)</h5>
+                            <span>GEM Colorimetric Match Active ✓</span>
+                        </div>
+                    </div>
+
+                    <div class="dimensions-grid">
+                        <div class="dim-field">
+                            <label>Height</label>
+                            <input type="text" id="dim-height" class="modal-input" value="175cm">
+                        </div>
+                        <div class="dim-field">
+                            <label>Bust / Chest</label>
+                            <input type="text" id="dim-bust" class="modal-input" value="88cm">
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="render-vto-btn" style="width: 100%;">Render Look On Body</button>
+                </div>
+
+                <div class="vto-viewport" id="vto-active-viewport">
+                    <div class="vto-live-badge">Spectrum Harmonized VTO</div>
+                    <img id="user-vto-photo" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80" alt="Your Photo">
+                    <img id="garment-vto-overlay" src="" alt="Garment Overlay">
+                </div>
+
+                <p class="manifesto-text" id="vto-nlp-description" style="font-style: italic; color: #00ff66; text-align: center; display: none;">
+                    "Harmonizing garment specular highlights to your skin spectrum..."
+                </p>
+
+                <button class="btn-primary" id="close-vto-action" style="width: 100%; display: none;">Keep in Wardrobe</button>
+            </div>
+        </div>
+
+        <!-- ABOUT MODAL -->
+        <div class="overlay" id="about-overlay">
+            <div class="sheet">
+                <div class="sheet-header">
+                    <h3>CUE Manifesto</h3>
+                    <button class="close-btn" id="close-about-btn">&times;</button>
+                </div>
+                <p class="manifesto-text">
+                    Work hard, play hard, to match the flow of life. Fashion and beauty aren't just surface details; they are your armor, your narrative, and the electric pulse of your journey—moving fluidly from the sharp focus of the day into the untamed energy of the night. Powered by Gemini concierge AI, we prove that we all can live together with style, peace, and connection.
+                </p>
+                <button class="btn-primary" id="close-about-action" style="width: 100%; margin-top: 6px;">Got It</button>
+            </div>
+        </div>
+
+        <!-- SIGN IN MODAL -->
+        <div class="overlay" id="signin-overlay">
+            <div class="sheet">
+                <div class="sheet-header">
+                    <h3 id="signin-modal-title">Member Sign In</h3>
+                    <button class="close-btn" id="close-signin-btn">&times;</button>
+                </div>
+                <p style="font-size: 0.75rem; color: #888;">What texture or memory makes you feel completely untouchable?</p>
+                <input type="text" id="member-memory-input" class="modal-input" placeholder="e.g., Vintage leather on a rainy night" />
+                <button class="btn-primary" id="submit-signin-btn" style="width: 100%;">Awaken Concierge</button>
+            </div>
+        </div>
+
+        <!-- SUCCESS SCREEN -->
+        <div class="overlay" id="success-overlay">
+            <div class="sheet" style="align-items: center; text-align: center;">
+                <h3 style="font-size: 1.4rem;">Order Confirmed</h3>
+                <p style="color: #00ff66; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;">Your curated look has been securely placed.</p>
+                <button class="btn-primary" id="reset-app-btn" style="width: 100%; margin-top: 10px;">Return Home</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const screenIntro = document.getElementById('screen-intro');
+            const screenHome = document.getElementById('screen-home');
+            const screenWorkspace = document.getElementById('screen-workspace');
+            
+            const aboutOverlay = document.getElementById('about-overlay');
+            const signinOverlay = document.getElementById('signin-overlay');
+            const successOverlay = document.getElementById('success-overlay');
+            const vtoOverlay = document.getElementById('vto-overlay');
+
+            const startSensoryBtn = document.getElementById('start-sensory-btn');
+            const openAboutBtn = document.getElementById('open-about-btn');
+            const closeAboutBtn = document.getElementById('close-about-btn');
+            const closeAboutAction = document.getElementById('close-about-action');
+
+            const openSigninBtn = document.getElementById('open-signin-btn');
+            const closeSigninBtn = document.getElementById('close-signin-btn');
+            const submitSigninBtn = document.getElementById('submit-signin-btn');
+            const memberMemoryInput = document.getElementById('member-memory-input');
+            const welcomeHeading = document.getElementById('welcome-heading');
+
+            const backHomeBtn = document.getElementById('back-home-btn');
+            const workspaceTitle = document.getElementById('workspace-title');
+            const previewCapsuleName = document.getElementById('preview-capsule-name');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            const resetAppBtn = document.getElementById('reset-app-btn');
+
+            const vtoModalTitle = document.getElementById('vto-modal-title');
+            const vtoSetupForm = document.getElementById('vto-setup-form');
+            const vtoActiveViewport = document.getElementById('vto-active-viewport');
+            const garmentVtoOverlay = document.getElementById('garment-vto-overlay');
+            const userVtoPhoto = document.getElementById('user-vto-photo');
+            const vtoNlpDescription = document.getElementById('vto-nlp-description');
+            const renderVtoBtn = document.getElementById('render-vto-btn');
+            const closeVtoBtn = document.getElementById('close-vto-btn');
+            const closeVtoAction = document.getElementById('close-vto-action');
+            const triggerFileBtn = document.getElementById('trigger-file-btn');
+            const userPhotoUpload = document.getElementById('user-photo-upload');
+
+            const skinSpectrumCard = document.getElementById('skin-spectrum-card');
+            const detectedSkinSwatch = document.getElementById('detected-skin-swatch');
+            const detectedSkinLabel = document.getElementById('detected-skin-label');
+
+            const categoryCards = document.querySelectorAll('.cat-card');
+            const designerCards = document.querySelectorAll('.designer-card');
+            const toggleBadges = document.querySelectorAll('.card-toggle-badge');
+            
+            const item1Name = document.getElementById('item-1-name');
+            const item1Meta = document.getElementById('item-1-meta');
+            const item1Price = document.getElementById('item-1-price');
+            const item2Name = document.getElementById('item-2-name');
+            const item2Meta = document.getElementById('item-2-meta');
+            const item2Price = document.getElementById('item-2-price');
+            const cartTotal = document.getElementById('cart-total');
+
+            let currentItemData = { designer: '', item: '', desc: '', img: '' };
+
+            const categoryData = {
+                'Clothing': {
+                    capsule: 'Atelier Vesper Wool & Silk',
+                    i1n: 'Daytime Executive Blazer', i1m: 'Clothing • Size S', i1p: '$420.00',
+                    i2n: 'Asymmetric Silk Slip', i2m: 'Clothing • Size S', i2p: '$280.00',
+                    total: '$700.00'
+                },
+                'Beauty': {
+                    capsule: 'Spectrum Tone Beauty Bar',
+                    i1n: 'Skin-Matched Complexion Tint', i1m: 'Beauty • Custom Shade #4', i1p: '$65.00',
+                    i2n: 'Golden Luminescence Highlighter', i2m: 'Beauty • Warm Undertone', i2p: '$48.00',
+                    total: '$113.00'
+                },
+                'Accessories': {
+                    capsule: 'Hardware & Fine Jewelry',
+                    i1n: 'Sculptural Gold Cuff', i1m: 'Accessories • Brushed Gold', i1p: '$190.00',
+                    i2n: 'Minimalist Chain Link', i2m: 'Accessories • Sterling', i2p: '$240.00',
+                    total: '$430.00'
+                },
+                'Bags & Shoes': {
+                    capsule: 'Architectural Carry Matrix',
+                    i1n: 'Calfskin Structured Tote', i1m: 'Bags • Obsidian Black', i1p: '$550.00',
+                    i2n: 'Pointed Leather Mule', i2m: 'Shoes • Size 38', i2p: '$290.00',
+                    total: '$840.00'
+                }
+            };
+
+            const carousel = document.getElementById('designer-carousel');
+            let scrollDirection = 1;
+            let autoScrollInterval = setInterval(() => {
+                if (carousel) {
+                    carousel.scrollLeft += scrollDirection * 0.7;
+                    if (carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth - 10)) {
+                        scrollDirection = -1;
+                    } else if (carousel.scrollLeft <= 5) {
+                        scrollDirection = 1;
+                    }
+                }
+            }, 35);
+
+            carousel.addEventListener('mouseenter', () => clearInterval(autoScrollInterval));
+            carousel.addEventListener('touchstart', () => clearInterval(autoScrollInterval));
+
+            toggleBadges.forEach(badge => {
+                badge.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const card = badge.closest('.designer-card');
+                    alert(`[Garment Spec View]\n\nItem: ${card.getAttribute('data-item')}\nDetails: ${card.getAttribute('data-desc')}`);
+                });
+            });
+
+            let holdTimer = null;
+            designerCards.forEach(card => {
+                const triggerHoldStart = (e) => {
+                    if (e.target.classList.contains('card-toggle-badge')) return;
+                    e.preventDefault();
+                    currentItemData.designer = card.getAttribute('data-designer');
+                    currentItemData.item = card.getAttribute('data-item');
+                    currentItemData.desc = card.getAttribute('data-desc');
+                    currentItemData.img = card.querySelector('.card-img').src;
+
+                    holdTimer = setTimeout(() => {
+                        vtoModalTitle.textContent = `Spectrum VTO: ${currentItemData.item}`;
+                        vtoSetupForm.style.display = 'flex';
+                        vtoActiveViewport.classList.remove('active');
+                        vtoNlpDescription.style.display = 'none';
+                        closeVtoAction.style.display = 'none';
+                        vtoOverlay.classList.add('active');
+
+                        if ('speechSynthesis' in window) {
+                            window.speechSynthesis.cancel();
+                            const utterance = new SpeechSynthesisUtterance(`Upload your photo to calibrate skin tone for the ${currentItemData.item}.`);
+                            utterance.rate = 0.93;
+                            window.speechSynthesis.speak(utterance);
+                        }
+                    }, 2000);
+                };
+
+                const cancelHold = () => {
+                    if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+                };
+
+                card.addEventListener('mousedown', triggerHoldStart);
+                card.addEventListener('mouseup', cancelHold);
+                card.addEventListener('mouseleave', cancelHold);
+                card.addEventListener('touchstart', triggerHoldStart, {passive: false});
+                card.addEventListener('touchend', cancelHold);
+                card.addEventListener('touchcancel', cancelHold);
+            });
+
+            triggerFileBtn.addEventListener('click', () => userPhotoUpload.click());
+            userPhotoUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        userVtoPhoto.src = event.target.result;
+                        detectedSkinSwatch.style.background = "#c89d7c";
+                        detectedSkinLabel.textContent = "Spectrum: Warm Olive / Rich Golden (Fitzpatrick IV)";
+                        skinSpectrumCard.style.display = 'flex';
+                        triggerFileBtn.textContent = "Skin Spectrum Captured ✓";
+                        triggerFileBtn.style.color = "#00ff66";
+                        triggerFileBtn.style.borderColor = "#00ff66";
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            renderVtoBtn.addEventListener('click', () => {
+                vtoSetupForm.style.display = 'none';
+                garmentVtoOverlay.src = currentItemData.img;
+                vtoActiveViewport.classList.add('active');
+                vtoNlpDescription.textContent = `"${currentItemData.desc} (Harmonized with your skin spectrum)."`;
+                vtoNlpDescription.style.display = 'block';
+                closeVtoAction.style.display = 'block';
+
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(`Skin spectrum mapped. You are wearing the ${currentItemData.item}.`);
+                    utterance.rate = 0.93;
+                    window.speechSynthesis.speak(utterance);
+                }
+            });
+
+            const closeVtoModal = () => {
+                vtoOverlay.classList.remove('active');
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            };
+
+            closeVtoBtn.addEventListener('click', closeVtoModal);
+            closeVtoAction.addEventListener('click', closeVtoModal);
+
+            startSensoryBtn.addEventListener('click', () => {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance("Welcome to CUE. Fashion and beauty are memory, armor, and motion. Let's live together with style.");
+                    utterance.rate = 0.95;
+                    window.speechSynthesis.speak(utterance);
+                }
+                screenIntro.classList.remove('active');
+                screenHome.classList.add('active');
+            });
+
+            categoryCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const cat = card.getAttribute('data-cat');
+                    const data = categoryData[cat];
+
+                    workspaceTitle.textContent = `CUE // ${cat}`;
+                    previewCapsuleName.textContent = data.capsule;
+                    item1Name.textContent = data.i1n;
+                    item1Meta.textContent = data.i1m;
+                    item1Price.textContent = data.i1p;
+                    item2Name.textContent = data.i2n;
+                    item2Meta.textContent = data.i2m;
+                    item2Price.textContent = data.i2p;
+                    cartTotal.textContent = data.total;
+
+                    screenHome.classList.remove('active');
+                    screenWorkspace.classList.add('active');
+                });
+            });
+
+            backHomeBtn.addEventListener('click', () => {
+                screenWorkspace.classList.remove('active');
+                screenHome.classList.add('active');
+            });
+
+            openAboutBtn.addEventListener('click', () => {
+                aboutOverlay.classList.add('active');
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(
+                        "Work hard, play hard, to match the flow of life. Fashion and beauty aren't just surface details; " +
+                        "they are your armor, your narrative, and the electric pulse of your journey—moving fluidly from the sharp " +
+                        "focus of the day into the untamed energy of the night. Powered by Gemini concierge AI, we prove that we " +
+                        "all can live together with style, peace, and connection."
+                    );
+                    utterance.rate = 0.93;
+                    window.speechSynthesis.speak(utterance);
+                }
+            });
+
+            const closeAbout = () => {
+                aboutOverlay.classList.remove('active');
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            };
+            closeAboutBtn.addEventListener('click', closeAbout);
+            closeAboutAction.addEventListener('click', closeAbout);
+
+            openSigninBtn.addEventListener('click', () => {
+                memberMemoryInput.value = '';
+                signinOverlay.classList.add('active');
+            });
+            closeSigninBtn.addEventListener('click', () => signinOverlay.classList.remove('active'));
+
+            submitSigninBtn.addEventListener('click', () => {
+                if (memberMemoryInput.value.trim()) {
+                    welcomeHeading.textContent = `Welcome, curated soul`;
+                    openSigninBtn.textContent = "CONCIERGE ACTIVE";
+                }
+                signinOverlay.classList.remove('active');
+            });
+
+            checkoutBtn.addEventListener('click', () => successOverlay.classList.add('active'));
+            resetAppBtn.addEventListener('click', () => {
+                successOverlay.classList.remove('active');
+                screenWorkspace.classList.remove('active');
+                screenHome.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
+<!D
+
